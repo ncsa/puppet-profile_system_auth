@@ -1,1 +1,97 @@
---- {}
+---
+profile_system_auth::config::enablemkhomedir: true
+profile_system_auth::config::oddjobd_mkhomedir_conf: |
+  <?xml version="1.0"?>
+  <!-- This file is managed by Puppet. -->
+  <oddjobconfig>
+    <service name="com.redhat.oddjob_mkhomedir">
+      <object name="/">
+        <interface name="org.freedesktop.DBus.Introspectable">
+          <allow min_uid="0" max_uid="0"/>
+        </interface>
+        <interface name="com.redhat.oddjob_mkhomedir">
+          <method name="mkmyhomedir">
+            <helper exec="/usr/libexec/oddjob/mkhomedir"
+                    arguments="0"
+                    prepend_user_name="yes"/>
+          </method>
+          <method name="mkhomedirfor">
+            <helper exec="/usr/libexec/oddjob/mkhomedir"
+                    arguments="1"/>
+            <allow user="root"/>
+          </method>
+        </interface>
+      </object>
+    </service>
+  </oddjobconfig>
+profile_system_auth::config::required_pkgs:
+  - "authconfig"
+  - "oddjob"
+  - "oddjob-mkhomedir"
+profile_system_auth::kerberos::cfg_file_settings:
+  /etc/krb5.conf: |
+    # This file is managed by Puppet.
+    includedir /etc/krb5.conf.d/
+  /etc/krb5.conf.d/domain_realm.conf: |
+    # This file is managed by Puppet.
+    [domain_realm]
+        .ncsa.illinois.edu = NCSA.EDU
+        .ncsa.uiuc.edu = NCSA.EDU
+        .ncsa.edu = NCSA.EDU
+        .cosmology.illinois.edu = NCSA.EDU
+  /etc/krb5.conf.d/kdc.conf: |
+    # This file is managed by Puppet.
+    [kdc]
+        profile = /etc/kdc.conf
+        afs_salt = NCSA.UIUC.EDU
+  /etc/krb5.conf.d/libdefaults.conf: |
+    # This file is managed by Puppet.
+    [libdefaults]
+        default_ccache_name = KEYRING:persistent:%{literal('%')}{uid}
+        default_realm = NCSA.EDU
+        forwardable = true
+        noaddresses = false
+  /etc/krb5.conf.d/realms.conf: |
+    # This file is managed by Puppet.
+    [realms]
+        NCSA.EDU = {
+            kdc = krb-lsst-ncsa1.ncsa.illinois.edu:88
+            kdc = krb-lsst-ncsa2.ncsa.illinois.edu:88
+            kdc = straw.ncsa.illinois.edu:88
+            kdc = wood.ncsa.illinois.edu:88
+            kdc = kerberos.ncsa.illinois.edu:88
+            admin_server = kadmin.ncsa.illinois.edu:749
+            default_domain = ncsa.illinois.edu
+        }
+profile_system_auth::kerberos::createhostkeytab: null
+profile_system_auth::kerberos::createhostuser: null
+profile_system_auth::kerberos::crons:
+  "key_cleanup":
+    command: "k5srvutil delold"
+    environment:
+      - "SHELL=/bin/sh"
+    hour: 8
+    minute: 1
+    monthday: 15
+    user: "root"
+  "key_refresh":
+    command: "sleep $((RANDOM \u005C\u0025 15))m && k5srvutil change"
+    environment:
+      - "SHELL=/bin/sh"
+    hour: 8
+    minute: 1
+    monthday: 1
+    user: "root"
+profile_system_auth::kerberos::required_pkgs:
+  - "krb5-libs"
+  - "krb5-workstation"
+profile_system_auth::kerberos::root_k5login_principals: null
+profile_system_auth::ldap::ldap_conf: |
+  # This file is managed by Puppet.
+  TLS_CACERTDIR   /etc/pki/tls/certs
+  TLS_REQCERT     demand
+  BASE            dc=ncsa,dc=illinois,dc=edu
+  URI             ldaps://ldap1.ncsa.illinois.edu ldaps://ldap2.ncsa.illinois.edu
+  SASL_NOCANON    on
+profile_system_auth::ldap::required_pkgs:
+  - "openldap-clients"
