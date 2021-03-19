@@ -7,6 +7,8 @@ profile_system_auth::config::required_pkgs:
   - "oddjob"
   - "oddjob-mkhomedir"
 profile_system_auth::config::use_authconfig: false
+profile_system_auth::kerberos::files_remove_setuid:
+  "/usr/bin/ksu": {}
 profile_system_auth::kerberos::required_pkgs:
   - "krb5-libs"
   - "krb5-workstation"

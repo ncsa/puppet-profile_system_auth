@@ -14,6 +14,9 @@
 # @param crons
 #   Hash of cron resource parameters for any CRON entries related to kerberos keytab cleanup
 #
+# @param files_remove_setuid
+#   Hash of file resource paramters that need setuid removed from them
+#
 # @param required_pkgs
 #   Array of strings of package names to install
 #
@@ -28,6 +31,7 @@ class profile_system_auth::kerberos (
   Optional[ String ] $createhostkeytab,  # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
   Optional[ String ] $createhostuser,
   Hash               $crons,
+  Hash               $files_remove_setuid,
   Array[ String[1] ] $required_pkgs,     # DEFAULT SET VIA MODULE DATA
   Optional[ Array[ String[1] ] ] $root_k5login_principals, # PRINCIPALS WITH ROOT PRIVILEGES
 ) {
@@ -40,6 +44,12 @@ class profile_system_auth::kerberos (
     ensure => file,
     mode   => '0644',
   }
+
+  # Remove setuid/setgid from key files
+  $file_remove_setuid_defaults = {
+    mode    => 'ug-s',
+  }
+  ensure_resources('file', $files_remove_setuid, $file_remove_setuid_defaults )
 
   # Ensure directory for include files
   file { '/etc/krb5.conf.d':

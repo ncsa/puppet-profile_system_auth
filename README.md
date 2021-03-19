@@ -5,37 +5,27 @@
 
 NCSA Common Puppet Profiles - configure standard system authentication
 
-## Table of Contents
-
-1. [Description](#description)
-1. [Setup - The basics of getting started with profile_system_auth](#setup)
-    * [What profile_system_auth affects](#what-profile_system_auth-affects)
-    * [Beginning with profile_system_auth](#beginning-with-profile_system_auth)
-1. [Usage - Configuration options and additional functionality](#usage)
-1. [Limitations - OS compatibility, etc.](#limitations)
-1. [Development - Guide for contributing to the module](#development)
 
 ## Description
 
-This common puppet profile module configures standard system authentication as 
+This common puppet profile module configures standard system authentication as
 used by NCSA. It configures kerberos, ldap, sssd, and general authentication.
 
-## Setup
 
-### What profile_system_auth affects
+## Dependencies
+- https://github.com/ncsa/puppet-sssd
+
 
 * `authselect` (or `authconfig` for EL7)
 * kerberos client and NCSA's kerberos configuration
 * kerberos host key creation and renewal (optional)
 * ldap clients and NCSA's ldap configuration
 * sssd configuration
+=======
+## Reference
 
-### Beginning with profile_system_auth
+[REFERENCE.md](REFERENCE.md)
 
-Include profile_system_auth in a puppet profile file:
-```
-include ::profile_system_auth
-```
 
 ## Usage
 
@@ -54,17 +44,3 @@ NCSA allows `createhost` principals for projects. This allows for two automated 
 - renewal (and cleanup) of Kerberos hostkeys of servers
 
 In order to support this, you need to request a `createhost` principal keytab for your project, then assign the base64 encoding of the keytab file to `profile_system_auth::kerberos::createhostkeytab` and the first part of the principal's username to `profile_system_auth::kerberos::createhostuser` parameters. NCSA staff can request a `createhost` principal by emailing service@ncsa.illinois.edu. They will provide you a principal username and either the keytab file for that user or a BASE64 encoding of that keytab.
-
-## Reference
-
-See: [REFERENCE.md](REFERENCE.md)
-
-## Limitations
-
-This module depends on the following modules:
-- https://github.com/ncsa/puppet-sssd
-
-## Development
-
-This Common Puppet Profile is managed by NCSA for internal usage.
-
