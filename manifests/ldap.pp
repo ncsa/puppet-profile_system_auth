@@ -1,6 +1,10 @@
 # @summary Basic ldap client setup
 #
-# Basic ldap client setup
+# @param ldap_conf
+#   String of file content for /etc/openldap/ldap.conf
+#
+# @param required_pkgs
+#   Array of strings of package names to install
 #
 # @example
 #   include profile_system_auth::ldap

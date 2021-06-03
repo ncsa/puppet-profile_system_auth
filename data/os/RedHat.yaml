@@ -1,0 +1,14 @@
+---
+profile_system_auth::config::removed_pkgs:
+  - "fprintd-pam"
+  - "authconfig"
+profile_system_auth::config::required_pkgs:
+  - "authselect"
+  - "oddjob"
+  - "oddjob-mkhomedir"
+profile_system_auth::config::use_authconfig: false
+profile_system_auth::kerberos::required_pkgs:
+  - "krb5-libs"
+  - "krb5-workstation"
+profile_system_auth::ldap::required_pkgs:
+  - "openldap-clients"

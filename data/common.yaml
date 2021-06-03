@@ -1,5 +1,6 @@
 ---
-profile_system_auth::config::enablemkhomedir: true
+profile_system_auth::config::authselect_profile: "sssd"
+profile_system_auth::config::enable_mkhomedir: true
 profile_system_auth::config::oddjobd_mkhomedir_conf: |
   <?xml version="1.0"?>
   <!-- This file is managed by Puppet. -->
@@ -24,10 +25,6 @@ profile_system_auth::config::oddjobd_mkhomedir_conf: |
       </object>
     </service>
   </oddjobconfig>
-profile_system_auth::config::required_pkgs:
-  - "authconfig"
-  - "oddjob"
-  - "oddjob-mkhomedir"
 profile_system_auth::kerberos::cfg_file_settings:
   /etc/krb5.conf: |
     # This file is managed by Puppet.
@@ -82,9 +79,6 @@ profile_system_auth::kerberos::crons:
     minute: 1
     monthday: 1
     user: "root"
-profile_system_auth::kerberos::required_pkgs:
-  - "krb5-libs"
-  - "krb5-workstation"
 profile_system_auth::kerberos::root_k5login_principals: null
 profile_system_auth::ldap::ldap_conf: |
   # This file is managed by Puppet.
@@ -93,5 +87,3 @@ profile_system_auth::ldap::ldap_conf: |
   BASE            dc=ncsa,dc=illinois,dc=edu
   URI             ldaps://ldap1.ncsa.illinois.edu ldaps://ldap2.ncsa.illinois.edu
   SASL_NOCANON    on
-profile_system_auth::ldap::required_pkgs:
-  - "openldap-clients"

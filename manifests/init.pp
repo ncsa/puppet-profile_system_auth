@@ -1,6 +1,6 @@
 # @summary Setup default system auth
 #
-# Setup system auth: authconfig, kerberos, ldap, sssd, etc
+# Setup system auth: authselect/authconfig, kerberos, ldap, sssd, etc
 #
 # @example
 #   include profile_system_auth
