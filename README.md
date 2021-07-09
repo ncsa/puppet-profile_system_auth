@@ -24,7 +24,7 @@ used by NCSA. It configures kerberos, ldap, sssd, and general authentication.
 
 ### What profile_system_auth affects
 
-* `authconfig` (USESSSD, USESSSDAUTH, MKHOMEDIR)
+* `authselect` (or `authconfig` for EL7)
 * kerberos client and NCSA's kerberos configuration
 * kerberos host key creation and renewal (optional)
 * ldap clients and NCSA's ldap configuration

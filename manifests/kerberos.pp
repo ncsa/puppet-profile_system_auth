@@ -1,8 +1,24 @@
 # profile_system_auth::kerberos
 #
-# @summary Basic kerberos client setup
+# @summary Basic kerberos client setup, with optional host principal management
 #
-# Basic kerberos client setup, with optional host principal management
+# @param cfg_file_settings
+#   Hash of file resource parameters for various config files
+#
+# @param createhostkeytab
+#   Optional String of base64 encoding of krb5 createhost keytab file
+#
+# @param createhostuser
+#   Optional String of kerberos principal username to be used for kerberos createhost
+#
+# @param crons
+#   Hash of cron resource parameters for any CRON entries related to kerberos keytab cleanup
+#
+# @param required_pkgs
+#   Array of strings of package names to install
+#
+# @param root_k5login_principals
+#   Optional Array k5login principals with root privileges
 #
 # @example
 #   include profile_system_auth::kerberos
