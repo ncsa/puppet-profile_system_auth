@@ -105,6 +105,7 @@ The following parameters are available in the `profile_system_auth::kerberos` cl
 * [`createhostkeytab`](#createhostkeytab)
 * [`createhostuser`](#createhostuser)
 * [`crons`](#crons)
+* [`files_remove_setuid`](#files_remove_setuid)
 * [`required_pkgs`](#required_pkgs)
 * [`root_k5login_principals`](#root_k5login_principals)
 
@@ -131,6 +132,12 @@ Optional String of kerberos principal username to be used for kerberos createhos
 Data type: `Hash`
 
 Hash of cron resource parameters for any CRON entries related to kerberos keytab cleanup
+
+##### <a name="files_remove_setuid"></a>`files_remove_setuid`
+
+Data type: `Hash`
+
+Hash of file resource paramters that need setuid removed from them
 
 ##### <a name="required_pkgs"></a>`required_pkgs`
 
