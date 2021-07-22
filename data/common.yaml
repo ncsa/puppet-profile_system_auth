@@ -36,29 +36,31 @@ profile_system_auth::kerberos::cfg_file_settings:
         .ncsa.uiuc.edu = NCSA.EDU
         .ncsa.edu = NCSA.EDU
         .cosmology.illinois.edu = NCSA.EDU
-  /etc/krb5.conf.d/kdc.conf: |
-    # This file is managed by Puppet.
-    [kdc]
-        profile = /etc/kdc.conf
-        afs_salt = NCSA.UIUC.EDU
   /etc/krb5.conf.d/libdefaults.conf: |
     # This file is managed by Puppet.
     [libdefaults]
-        default_ccache_name = KEYRING:persistent:%{literal('%')}{uid}
         default_realm = NCSA.EDU
         forwardable = true
         noaddresses = false
+        dns_lookup_kdc = true
+        dns_lookup_realm = false
+        ticket_lifetime = 25h
+        renew_lifetime = 7d
   /etc/krb5.conf.d/realms.conf: |
     # This file is managed by Puppet.
     [realms]
+        AD.UILLINOIS.EDU = {
+        }
+
         NCSA.EDU = {
-            kdc = krb-lsst-ncsa1.ncsa.illinois.edu:88
-            kdc = krb-lsst-ncsa2.ncsa.illinois.edu:88
+            admin_server = kadmin.ncsa.illinois.edu:749
+            default_domain = ncsa.illinois.edu
             kdc = straw.ncsa.illinois.edu:88
             kdc = wood.ncsa.illinois.edu:88
             kdc = kerberos.ncsa.illinois.edu:88
-            admin_server = kadmin.ncsa.illinois.edu:749
-            default_domain = ncsa.illinois.edu
+        }
+
+        TERAGRID.ORG = {
         }
 profile_system_auth::kerberos::createhostkeytab: null
 profile_system_auth::kerberos::createhostuser: null
