@@ -65,6 +65,8 @@ class profile_system_auth::config (
   if $enable_mkhomedir
   {
     service { 'oddjobd':
+      ensure  => running,
+      enable  => true,
       require => [
         Package[$required_pkgs],
       ],
