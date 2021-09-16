@@ -5,3 +5,11 @@ profile_system_auth::config::required_pkgs:
   - "oddjob"
   - "oddjob-mkhomedir"
 profile_system_auth::config::use_authconfig: true
+profile_system_auth::ldap::ldap_conf: |
+  # This file is managed by Puppet.
+  TLS_CACERTDIR   /etc/pki/tls/certs
+  TLS_REQCERT     demand
+  BASE            dc=ncsa,dc=illinois,dc=edu
+  URI             ldaps://ldap1.ncsa.illinois.edu ldaps://ldap2.ncsa.illinois.edu ldaps://ldap3.ncsa.illinois.edu ldaps://ldap4.ncsa.illinois.edu
+  SASL_NOCANON    on
+  SSL             yes
