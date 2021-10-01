@@ -84,13 +84,18 @@ class profile_system_auth::kerberos (
 
   if ( $usevault )
   {
-    $createhostkeytab = Deferred('vault_key', [$vault_uri, $vault_authmethod, $vault_secret])
+    $vaultcreatehostkeytab = Deferred('vault_key', [$vault_uri, $vault_authmethod, $vault_secret])
     notify { 'get_createhost_vault' :
-      message => $createhostkeytab,
+      message => $vaultcreatehostkeytab,
     }
+    $hostkeytabbase64 = $vaultcreatehostkeytab
+  }
+  else
+  {
+    $hostkeytabbase64 = $createhostkeytab
   }
 
-  if ( $createhostkeytab and $createhostuser )
+  if ( $hostkeytabbase64 and $createhostuser )
   {
     # CREATE KEYS AND SETUP RENEWAL
     file { '/root/createhostkeytab.sh':
