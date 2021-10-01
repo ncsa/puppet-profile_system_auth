@@ -62,8 +62,13 @@ profile_system_auth::kerberos::cfg_file_settings:
 
         TERAGRID.ORG = {
         }
+
 profile_system_auth::kerberos::createhostkeytab: null
+profile_system_auth::kerberos::vaultkeytabkey: null
+profile_system_auth::kerberos::vaultsecretdir: null
 profile_system_auth::kerberos::createhostuser: null
+
+
 profile_system_auth::kerberos::crons:
   "key_cleanup":
     command: "k5srvutil delold"
