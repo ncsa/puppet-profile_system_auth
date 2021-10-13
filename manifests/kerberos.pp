@@ -80,7 +80,7 @@ class profile_system_auth::kerberos (
 
   if ( ::profile_secrets::enable )
   {
-    $vaultcreatehostkeytab = Deferred('::profile_secrets::lookup_key', 'createhost.keytab')
+    $vaultcreatehostkeytab = Deferred('::profile_secrets::lookup_key', ['createhost.keytab'])
     notify { 'get_createhost_vault' :
       message => $vaultcreatehostkeytab,
     }
