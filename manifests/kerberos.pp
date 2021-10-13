@@ -84,12 +84,12 @@ class profile_system_auth::kerberos (
     notify { 'vault_uri' :
       message => $vault_uri,
     }
-    $vault_auth = profile_secrets::vault_authmethod
+    $vault_auth = lookup(profile_secrets::vault_authmethod)
     notify { 'vault_auth' :
       message => $vault_auth,
     }
 
-    $vault_kv_version = profile_secrets::vault_kv_version
+    $vault_kv_version = lookup(profile_secrets::vault_kv_version)
     #$vaultcreatehostkeytab = Deferred('vault_key',[$vault_uri,$vault_auth,'createhost.keytab',$vault_kv_version])
     notify { 'get_createhost_vault' :
       message => $vaultcreatehostkeytab,
