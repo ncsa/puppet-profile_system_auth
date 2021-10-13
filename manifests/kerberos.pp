@@ -80,9 +80,12 @@ class profile_system_auth::kerberos (
 
   if ( ::profile_secrets::enable )
   {
-    
     $vault_uri = profile_secrets::lookup_uri('krb5')
-    $vaultcreatehostkeytab = Deferred('vault_key',[profile_secrets::lookup_uri('krb5'),profile_secrets::vault_authmethod,'createhost.keytab'])
+    $vault_auth = profile_secrets::vault_authmethod
+    $vault_kv_version = profile_secrets::vault_authmethod
+
+
+    $vaultcreatehostkeytab = Deferred('vault_key',[$vault_uri,$vault_auth,'createhost.keytab',$vault_kv_version])
     notify { 'get_createhost_vault' :
       message => $vaultcreatehostkeytab,
     }
