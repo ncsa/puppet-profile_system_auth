@@ -63,7 +63,7 @@ profile_system_auth::kerberos::cfg_file_settings:
         TERAGRID.ORG = {
         }
 profile_system_auth::kerberos::createhostkeytab: null
-profile_system_auth::kerberos::createhostuser: null
+profile_system_auth::kerberos::createhostuser: "delta"
 profile_secrets::enable: true
 profile_secrets::vault_authmethod: "delta"
 profile_secrets::vault_base_url: "https://asd-vault1.internal.ncsa.edu:8200"
