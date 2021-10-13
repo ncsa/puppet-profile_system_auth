@@ -29,11 +29,6 @@
 class profile_system_auth::kerberos (
   Hash               $cfg_file_settings, # cfg files and their contents
   Optional[ String ] $createhostkeytab,  # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
-  Optional[Boolean]  $usevault,          # Use Vault to lookup
-  Optional[ String ] $vault_uri,        #Provide the URI, Auth Method, secret  
-  Optional[ String ] $vault_authmethod,        #Provide the URI, Auth Method, secret  
-  Optional[ String ] $vault_secret,        #Provide the URI, Auth Method, secret  
-  Optional[ String ] $createhostuser,
   Hash               $crons,
   Hash               $files_remove_setuid,
   Array[ String[1] ] $required_pkgs,     # DEFAULT SET VIA MODULE DATA
@@ -82,9 +77,9 @@ class profile_system_auth::kerberos (
     }
   }
 
-  if ( $usevault )
+  if ( ::profile_secrets::enable )
   {
-    $vaultcreatehostkeytab = Deferred('vault_key', [$vault_uri, $vault_authmethod, $vault_secret])
+    $vaultcreatehostkeytab = Deferred('::profile_secrets::lookup_key', [createhost.keytab])
     notify { 'get_createhost_vault' :
       message => $vaultcreatehostkeytab,
     }

@@ -64,10 +64,11 @@ profile_system_auth::kerberos::cfg_file_settings:
         }
 profile_system_auth::kerberos::createhostkeytab: null
 profile_system_auth::kerberos::createhostuser: null
-profile_system_auth::kerberos::usevault: false
-profile_system_auth::kerberos::vault_authmethod: null
-profile_system_auth::kerberos::vault_uri: null
-profile_system_auth::kerberos::vault_secret: null
+profile_secrets::enable: true
+profile_secrets::vault_authmethod: "delta"
+profile_secrets::vault_base_url: "https://asd-vault1.internal.ncsa.edu:8200"
+profile_secrets::vault_secrets_engine: "delta-secret"
+profile_secrets::vault_version: "v1"
 
 profile_system_auth::kerberos::crons:
   "key_cleanup":
