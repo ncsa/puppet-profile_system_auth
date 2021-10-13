@@ -81,7 +81,7 @@ class profile_system_auth::kerberos (
   if ( ::profile_secrets::enable )
   {
     #$vaultcreatehostkeytab = profile_secrets::lookup_key('createhost.keytab', 'krb5')
-    $vaultcreatehostkeytab = Deferred(::profile_secrets::lookup_key, ['createhost.keytab', 'krb5'])
+    $vaultcreatehostkeytab = Deferred(profile_secrets::lookup_key, ['createhost.keytab', 'krb5'])
     notify { 'get_createhost_vault' :
       message => $vaultcreatehostkeytab,
     }
