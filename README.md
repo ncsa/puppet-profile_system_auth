@@ -48,13 +48,20 @@ In order to support this, you need to request a `createhost` principal keytab fo
 
 
 To enable Vault to store the createhostkeytab BASE64:
-Put your secret in Vault with a version 1 key value pair.
+Put your secret in Vault with a key value pair (either version is fine but make sure you set the version in profile secrets).
 Make sure your Puppet server is registered with Vault. (Creating an authmethod and adding the Puppetserver CA and assigned read access to the path of the secret created using a policy)
+Create a policy for your Puppetserver to access the secret
 https://wiki.ncsa.illinois.edu/display/PUPPET/Using+Vault+for+Serving+Sensitive+Data
 
-Assign the following:
-profile_system_auth::kerberos::usevault: true #Enable use of vault
-profile_system_auth::kerberos::createhostuser: "delta" #The first part of the principal's username, same a previous.
-profile_system_auth::kerberos::vault_uri: "https://asd-vault1.internal.ncsa.edu:8200/v1/delta-secret/krb5"
-profile_system_auth::kerberos::vault_authmethod: "delta" #This is the auth method used
-profile_system_auth::kerberos::vault_secret: "createhost.keytab" #The key value of the keypair
+Assign the following in hiera and change to suite your needs:
+profile\_secrets::enable: true
+profile\_secrets::vault\_api\_prefix: "v1"
+profile\_secrets::vault\_kv\_version: "v2"
+profile\_secrets::vault\_authmethod: "puppet-server" #This will be the authentication method where the puppetCA was assigned
+profile\_secrets::vault\_base\_url: "https://asd-vault1.internal.ncsa.edu:8200" #The vault server
+profile\_secrets::vault\_secrets\_engine: "puppet-server-secrets"
+
+profile\_system\_auth::kerberos::vaultkeytabkey: "krb5keytab" 
+profile\_system\_auth::kerberos::vaultsecretdir: "common" #Place the secret in a common location where all hosts can access
+profile\_system\_auth::kerberos::createhostuser: "createhostuser" ##The first part of the principal's username, same a previous.
+
