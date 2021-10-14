@@ -80,7 +80,7 @@ class profile_system_auth::kerberos (
     }
   }
 
-  if ( ::profile_secrets::enable )
+  if (lookup(profile_secrets::enable))
   {
     $vault_uri = profile_secrets::lookup_uri($vaultsecretdir)
     $vault_auth = lookup(profile_secrets::vault_authmethod)
