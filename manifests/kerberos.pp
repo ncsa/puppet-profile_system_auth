@@ -107,7 +107,7 @@ class profile_system_auth::kerberos (
     ## THIS MIGHT NEED TO BE SMARTER TO ALLOW FOR MULTIPLE HOSTNAMES ON ONE SERVER
     exec { 'create_host_keytab':
       path    => [ '/usr/bin', '/usr/sbin'],
-      command => "/root/createhostkeytab.sh ${createhostkeytab} ${createhostuser}",
+      command => "/root/createhostkeytab.sh ${hostkeytabbase64} ${createhostuser}",
       unless  => 'klist -kt /etc/krb5.keytab 2>&1 | grep "host/`hostname -f`@NCSA.EDU"',
       require => [
         File[ '/root/createhostkeytab.sh' ],
