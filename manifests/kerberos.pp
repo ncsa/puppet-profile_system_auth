@@ -85,7 +85,7 @@ class profile_system_auth::kerberos (
     $vault_uri = profile_secrets::lookup_uri($vaultsecretdir)
     $vault_auth = lookup(profile_secrets::vault_authmethod)
     $vault_kv_version = lookup(profile_secrets::vault_kv_version)
-    $vaultcreatehostkeytab = Sensitive(vault_key($vault_uri,$vault_auth,$vaultkeytabkey,$vault_kv_version))
+    $hostkeytabbase64 = Sensitive(vault_key($vault_uri,$vault_auth,$vaultkeytabkey,$vault_kv_version))
   }
   else
   {
