@@ -88,6 +88,7 @@ class profile_system_auth::kerberos (
     $hostkeytabbase64 = vault_key($vault_uri,$vault_auth,$vaultkeytabkey,$vault_kv_version)
     notify { 'get_createhost_vault' :
       message => $hostkeytabbase64,
+    }
   }
   else
   {
