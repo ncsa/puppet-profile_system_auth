@@ -108,6 +108,9 @@ The following parameters are available in the `profile_system_auth::kerberos` cl
 * [`files_remove_setuid`](#files_remove_setuid)
 * [`required_pkgs`](#required_pkgs)
 * [`root_k5login_principals`](#root_k5login_principals)
+* [`vaultkeytabkey`](#vaultkeytabkey)
+* [`vaultkeytabkey`](#vaultkeytabkey)
+* [`vaultsecretdir`](#vaultsecretdir)
 
 ##### <a name="cfg_file_settings"></a>`cfg_file_settings`
 
@@ -151,21 +154,25 @@ Data type: `Optional[ Array[ String[1] ] ]`
 
 Optional Array k5login principals with root privileges
 
-### <a name="profile_system_authldap"></a>`profile_system_auth::ldap`
-
-Basic ldap client setup
-
 ##### <a name="vaultkeytabkey"></a>`vaultkeytabkey`
 
 Data type: `Optional[ String ]`
 
-name of the key located on the vault server (vault must be enabled through the profile\_secrets)
+# The key to the base64 encoded hostkeytab in vault
+
+##### <a name="vaultkeytabkey"></a>`vaultkeytabkey`
+
+# The key to the base64 encoded hostkeytab in vault
 
 ##### <a name="vaultsecretdir"></a>`vaultsecretdir`
 
 Data type: `Optional[ String ]`
 
-Optional String for the directory in Vault where the vaultkeytabkey is located
+# Directory where the secret is located in vault
+
+### <a name="profile_system_authldap"></a>`profile_system_auth::ldap`
+
+Basic ldap client setup
 
 #### Examples
 

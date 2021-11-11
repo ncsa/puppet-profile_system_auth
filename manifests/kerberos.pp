@@ -23,6 +23,15 @@
 # @param root_k5login_principals
 #   Optional Array k5login principals with root privileges
 #
+# @param vaultkeytabkey
+#   # The key to the base64 encoded hostkeytab in vault
+#
+# @param vaultkeytabkey
+#   # The key to the base64 encoded hostkeytab in vault
+#
+# @param vaultsecretdir
+#   # Directory where the secret is located in vault
+#
 # @example
 #   include profile_system_auth::kerberos
 #
