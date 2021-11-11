@@ -174,18 +174,6 @@ Data type: `Optional[ String ]`
 
 Basic ldap client setup
 
-##### <a name="vaultkeytabkey"></a>`vaultkeytabkey`
-
-Data type: `Optional[ String ]`
-
-name of the key located on the vault server (vault must be enabled through the profile\_secrets)
-
-##### <a name="vaultsecretdir"></a>`vaultsecretdir`
-
-Data type: `Optional[ String ]`
-
-Optional String for the directory in Vault where the vaultkeytabkey is located
-
 #### Examples
 
 ##### 
