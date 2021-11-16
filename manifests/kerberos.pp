@@ -26,9 +26,6 @@
 # @param vaultkeytabkey
 #   # The key to the base64 encoded hostkeytab in vault
 #
-# @param vaultkeytabkey
-#   # The key to the base64 encoded hostkeytab in vault
-#
 # @param vaultsecretdir
 #   # Directory where the secret is located in vault
 #
