@@ -23,13 +23,21 @@
 # @param root_k5login_principals
 #   Optional Array k5login principals with root privileges
 #
+# @param vaultkeytabkey
+#   # The key to the base64 encoded hostkeytab in vault
+#
+# @param vaultsecretdir
+#   # Directory where the secret is located in vault
+#
 # @example
 #   include profile_system_auth::kerberos
 #
 class profile_system_auth::kerberos (
   Hash               $cfg_file_settings, # cfg files and their contents
   Optional[ String ] $createhostkeytab,  # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
-  Optional[ String ] $createhostuser,
+  Optional[ String ] $vaultkeytabkey,    # The key to the base64 encoded hostkeytab in vault
+  Optional[ String ] $vaultsecretdir,    # Directory where the secret is located in vault
+  Optional[ String ] $createhostuser,    # CREATEHOST USER
   Hash               $crons,
   Hash               $files_remove_setuid,
   Array[ String[1] ] $required_pkgs,     # DEFAULT SET VIA MODULE DATA
@@ -78,7 +86,19 @@ class profile_system_auth::kerberos (
     }
   }
 
-  if ( $createhostkeytab and $createhostuser )
+  if (lookup(profile_secrets::enable))
+  {
+    $vault_uri = profile_secrets::lookup_uri($vaultsecretdir)
+    $vault_auth = lookup(profile_secrets::vault_authmethod)
+    $vault_kv_version = lookup(profile_secrets::vault_kv_version)
+    $createhostkeytabbase64 = Sensitive(vault_key($vault_uri,$vault_auth,$vaultkeytabkey,$vault_kv_version))
+  }
+  else
+  {
+    $createhostkeytabbase64 = $createhostkeytab
+  }
+
+  if ( $createhostkeytabbase64 and $createhostuser )
   {
     # CREATE KEYS AND SETUP RENEWAL
     file { '/root/createhostkeytab.sh':
@@ -89,7 +109,7 @@ class profile_system_auth::kerberos (
     ## THIS MIGHT NEED TO BE SMARTER TO ALLOW FOR MULTIPLE HOSTNAMES ON ONE SERVER
     exec { 'create_host_keytab':
       path    => [ '/usr/bin', '/usr/sbin'],
-      command => "/root/createhostkeytab.sh ${createhostkeytab} ${createhostuser}",
+      command => "/root/createhostkeytab.sh ${createhostkeytabbase64} ${createhostuser}",
       unless  => 'klist -kt /etc/krb5.keytab 2>&1 | grep "host/`hostname -f`@NCSA.EDU"',
       require => [
         File[ '/root/createhostkeytab.sh' ],
