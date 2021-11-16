@@ -109,7 +109,6 @@ The following parameters are available in the `profile_system_auth::kerberos` cl
 * [`required_pkgs`](#required_pkgs)
 * [`root_k5login_principals`](#root_k5login_principals)
 * [`vaultkeytabkey`](#vaultkeytabkey)
-* [`vaultkeytabkey`](#vaultkeytabkey)
 * [`vaultsecretdir`](#vaultsecretdir)
 
 ##### <a name="cfg_file_settings"></a>`cfg_file_settings`
@@ -157,10 +156,6 @@ Optional Array k5login principals with root privileges
 ##### <a name="vaultkeytabkey"></a>`vaultkeytabkey`
 
 Data type: `Optional[ String ]`
-
-# The key to the base64 encoded hostkeytab in vault
-
-##### <a name="vaultkeytabkey"></a>`vaultkeytabkey`
 
 # The key to the base64 encoded hostkeytab in vault
 

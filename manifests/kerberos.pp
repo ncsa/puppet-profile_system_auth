@@ -91,14 +91,14 @@ class profile_system_auth::kerberos (
     $vault_uri = profile_secrets::lookup_uri($vaultsecretdir)
     $vault_auth = lookup(profile_secrets::vault_authmethod)
     $vault_kv_version = lookup(profile_secrets::vault_kv_version)
-    $hostkeytabbase64 = Sensitive(vault_key($vault_uri,$vault_auth,$vaultkeytabkey,$vault_kv_version))
+    $createhostkeytabbase64 = Sensitive(vault_key($vault_uri,$vault_auth,$vaultkeytabkey,$vault_kv_version))
   }
   else
   {
-    $hostkeytabbase64 = $createhostkeytab
+    $createhostkeytabbase64 = $createhostkeytab
   }
 
-  if ( $hostkeytabbase64 and $createhostuser )
+  if ( $createhostkeytabbase64 and $createhostuser )
   {
     # CREATE KEYS AND SETUP RENEWAL
     file { '/root/createhostkeytab.sh':
@@ -109,7 +109,7 @@ class profile_system_auth::kerberos (
     ## THIS MIGHT NEED TO BE SMARTER TO ALLOW FOR MULTIPLE HOSTNAMES ON ONE SERVER
     exec { 'create_host_keytab':
       path    => [ '/usr/bin', '/usr/sbin'],
-      command => "/root/createhostkeytab.sh ${hostkeytabbase64} ${createhostuser}",
+      command => "/root/createhostkeytab.sh ${createhostkeytabbase64} ${createhostuser}",
       unless  => 'klist -kt /etc/krb5.keytab 2>&1 | grep "host/`hostname -f`@NCSA.EDU"',
       require => [
         File[ '/root/createhostkeytab.sh' ],
