@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -e
+
 RANDSTRING=`head -c 16 /dev/random  | base64 | grep -o . | sort -R | tr -d "\n" | head -c 14`
 REQCLASS1=`date | base64 | tr -dc A-Z | grep -o . | sort -R | tr -d "\n" | head -c2`
 REQCLASS2=`date | base64 | tr -dc a-z | grep -o . | sort -R | tr -d "\n" | head -c2`
