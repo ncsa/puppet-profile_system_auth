@@ -108,8 +108,6 @@ The following parameters are available in the `profile_system_auth::kerberos` cl
 * [`files_remove_setuid`](#files_remove_setuid)
 * [`required_pkgs`](#required_pkgs)
 * [`root_k5login_principals`](#root_k5login_principals)
-* [`vaultkeytabkey`](#vaultkeytabkey)
-* [`vaultsecretdir`](#vaultsecretdir)
 
 ##### <a name="cfg_file_settings"></a>`cfg_file_settings`
 
@@ -152,18 +150,6 @@ Array of strings of package names to install
 Data type: `Optional[ Array[ String[1] ] ]`
 
 Optional Array k5login principals with root privileges
-
-##### <a name="vaultkeytabkey"></a>`vaultkeytabkey`
-
-Data type: `Optional[ String ]`
-
-# The key to the base64 encoded hostkeytab in vault
-
-##### <a name="vaultsecretdir"></a>`vaultsecretdir`
-
-Data type: `Optional[ String ]`
-
-# Directory where the secret is located in vault
 
 ### <a name="profile_system_authldap"></a>`profile_system_auth::ldap`
 
