@@ -80,8 +80,8 @@ profile_system_auth::kerberos::crons:
     command: "sleep $((RANDOM \u005C\u0025 15))m && k5srvutil change"
     environment:
       - "SHELL=/bin/sh"
-    hour: 8
-    minute: 1
+    hour: 23
+    minute: 30
     monthday: 1
     user: "root"
 profile_system_auth::kerberos::root_k5login_principals: null
