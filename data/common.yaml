@@ -92,3 +92,5 @@ profile_system_auth::ldap::ldap_conf: |
   URI             ldaps://ldap1.ncsa.illinois.edu ldaps://ldap2.ncsa.illinois.edu ldaps://ldap3.ncsa.illinois.edu ldaps://ldap4.ncsa.illinois.edu
   SASL_NOCANON    on
   SSL             yes
+
+profile_system_auth::su::disable_su: true

@@ -9,6 +9,7 @@ class profile_system_auth {
   include ::profile_system_auth::config
   include ::profile_system_auth::kerberos
   include ::profile_system_auth::ldap
+  include ::profile_system_auth::su
   include ::sssd
 
 }

@@ -21,3 +21,5 @@ profile_system_auth::ldap::ldap_conf: |
   SSL             yes
 profile_system_auth::ldap::required_pkgs:
   - "openldap-clients"
+
+profile_system_auth::su::su_path: "/usr/bin/su"
