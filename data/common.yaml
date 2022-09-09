@@ -66,7 +66,6 @@ profile_system_auth::kerberos::cfg_file_settings:
 profile_system_auth::kerberos::createhostkeytab: null
 profile_system_auth::kerberos::createhostuser: null
 
-
 profile_system_auth::kerberos::crons:
   "key_cleanup":
     command: "k5srvutil delold"
@@ -84,7 +83,10 @@ profile_system_auth::kerberos::crons:
     minute: 30
     monthday: 1
     user: "root"
+profile_system_auth::kerberos::enable: true
+
 profile_system_auth::kerberos::root_k5login_principals: null
+
 profile_system_auth::ldap::ldap_conf: |
   # This file is managed by Puppet.
   TLS_REQCERT     demand
