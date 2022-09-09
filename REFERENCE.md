@@ -10,6 +10,7 @@
 * [`profile_system_auth::config`](#profile_system_authconfig): Configure system auth
 * [`profile_system_auth::kerberos`](#profile_system_authkerberos): Basic kerberos client setup, with optional host principal management
 * [`profile_system_auth::ldap`](#profile_system_authldap): Basic ldap client setup
+* [`profile_system_auth::su`](#profile_system_authsu): Basic su configuration
 
 ## Classes
 
@@ -105,6 +106,7 @@ The following parameters are available in the `profile_system_auth::kerberos` cl
 * [`createhostkeytab`](#createhostkeytab)
 * [`createhostuser`](#createhostuser)
 * [`crons`](#crons)
+* [`enable`](#enable)
 * [`files_remove_setuid`](#files_remove_setuid)
 * [`required_pkgs`](#required_pkgs)
 * [`root_k5login_principals`](#root_k5login_principals)
@@ -132,6 +134,12 @@ Optional String of kerberos principal username to be used for kerberos createhos
 Data type: `Hash`
 
 Hash of cron resource parameters for any CRON entries related to kerberos keytab cleanup
+
+##### <a name="enable"></a>`enable`
+
+Data type: `Boolean`
+
+Used to enable or disable kerberos
 
 ##### <a name="files_remove_setuid"></a>`files_remove_setuid`
 
@@ -181,4 +189,35 @@ String of file content for /etc/openldap/ldap.conf
 Data type: `Array[ String[1] ]`
 
 Array of strings of package names to install
+
+### <a name="profile_system_authsu"></a>`profile_system_auth::su`
+
+Basic su configuration
+
+#### Examples
+
+##### 
+
+```puppet
+include profile_system_auth::su
+```
+
+#### Parameters
+
+The following parameters are available in the `profile_system_auth::su` class:
+
+* [`disable_su`](#disable_su)
+* [`su_path`](#su_path)
+
+##### <a name="disable_su"></a>`disable_su`
+
+Data type: `Boolean`
+
+Boolean to disable su (disabled by setting permissions on su to 700)
+
+##### <a name="su_path"></a>`su_path`
+
+Data type: `String`
+
+Path to the su binary
 
