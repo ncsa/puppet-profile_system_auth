@@ -53,11 +53,11 @@ profile_system_auth::kerberos::cfg_file_settings:
         }
 
         NCSA.EDU = {
-            admin_server = kadmin.ncsa.illinois.edu:749
-            default_domain = ncsa.illinois.edu
-            kdc = straw.ncsa.illinois.edu:88
-            kdc = wood.ncsa.illinois.edu:88
-            kdc = kerberos.ncsa.illinois.edu:88
+          admin_server = kadmin.ncsa.illinois.edu
+          kdc = kerberos.ncsa.illinois.edu
+          kdc = kerberos-1.ncsa.illinois.edu
+          kdc = kerberos-2.ncsa.illinois.edu
+          kdc = kerberos-3.ncsa.illinois.edu
         }
 
         TERAGRID.ORG = {
