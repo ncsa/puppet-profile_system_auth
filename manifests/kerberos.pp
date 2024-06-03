@@ -31,17 +31,15 @@
 #
 class profile_system_auth::kerberos (
   Hash               $cfg_file_settings, # cfg files and their contents
-  Optional[ String ] $createhostkeytab,  # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
-  Optional[ String ] $createhostuser,    # CREATEHOST USER
+  Optional[String] $createhostkeytab,  # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
+  Optional[String] $createhostuser,    # CREATEHOST USER
   Hash               $crons,
   Boolean            $enable,
   Hash               $files_remove_setuid,
-  Array[ String[1] ] $required_pkgs,     # DEFAULT SET VIA MODULE DATA
-  Optional[ Array[ String[1] ] ] $root_k5login_principals, # PRINCIPALS WITH ROOT PRIVILEGES
+  Array[String[1]] $required_pkgs,     # DEFAULT SET VIA MODULE DATA
+  Optional[Array[String[1]]] $root_k5login_principals, # PRINCIPALS WITH ROOT PRIVILEGES
 ) {
-
   if ($enable) {
-
     ensure_packages( $required_pkgs )
 
     File {
@@ -70,50 +68,46 @@ class profile_system_auth::kerberos (
       }
     }
 
-    if ( $root_k5login_principals )
-    {
+    if ( $root_k5login_principals ) {
       file { '/root/.k5login':
         content => join($root_k5login_principals, "\n"),
         mode    => '0600',
       }
     }
-    else
-    {
+    else {
       file { '/root/.k5login':
         ensure => 'absent',
       }
     }
 
-    if ( $createhostkeytab and $createhostuser )
-    {
+    if ( $createhostkeytab and $createhostuser ) {
       # CREATE KEYS AND SETUP RENEWAL
       file { '/root/createhostkeytab.sh':
-        ensure => present,
+        ensure => file,
         mode   => '0700',
         source => "puppet:///modules/${module_name}/root/createhostkeytab.sh",
       }
       ## THIS MIGHT NEED TO BE SMARTER TO ALLOW FOR MULTIPLE HOSTNAMES ON ONE SERVER
       exec { 'create_host_keytab':
-        path    => [ '/usr/bin', '/usr/sbin'],
+        path    => ['/usr/bin', '/usr/sbin', '/usr/lib/mit/bin'],
         command => "/root/createhostkeytab.sh ${createhostkeytab} ${createhostuser}",
         unless  => 'klist -kt /etc/krb5.keytab 2>&1 | grep "host/`hostname -f`@NCSA.EDU"',
         require => [
-          File[ '/root/createhostkeytab.sh' ],
-        ]
+          File['/root/createhostkeytab.sh'],
+        ],
       }
 
       Cron {
         user        => 'root',
         hour        => 8,
         minute      => 1,
-        environment => ['SHELL=/bin/sh', ],
+        environment => ['SHELL=/bin/sh',],
       }
       $crons.each | $k, $v | {
         cron { $k: * => $v }
       }
     }
-    else
-    {
+    else {
       file { '/root/createhostkeytab.sh':
         ensure => absent,
       }

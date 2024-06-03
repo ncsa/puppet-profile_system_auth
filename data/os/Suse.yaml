@@ -1,0 +1,46 @@
+---
+profile_system_auth::config::pam_config:
+  "Set common-auth pam_unix sufficent":
+    ensure: "present"
+    service: "common-auth"
+    type: "auth"
+    control: "sufficient"
+    module: "pam_unix.so"
+    arguments: "try_first_pass"
+    position: "after module pam_env.so"
+  "Set common-auth pam_sss sufficent":
+    ensure: "present"
+    service: "common-auth"
+    type: "auth"
+    control: "sufficient"
+    module: "pam_sss.so"
+    arguments: "use_first_pass"
+    position: "after module pam_unix.so"
+profile_system_auth::config::removed_pkgs:
+  - "fprintd-pam"
+  - "authconfig"
+profile_system_auth::config::required_pkgs:
+  - "authselect"
+  - "oddjob"
+  - "oddjob-mkhomedir"
+profile_system_auth::config::use_authconfig: false
+
+profile_system_auth::kerberos::files_remove_setuid:
+  "/usr/lib/mit/bin/ksu": {}
+profile_system_auth::kerberos::required_pkgs:
+  - "krb5-appl-clients"
+  - "krb5-client"
+  - "krb5-plugin-preauth-pkinit"
+  - "krb5-plugin-preauth-spake"
+
+profile_system_auth::ldap::ldap_conf: |
+  # This file is managed by Puppet.
+  TLS_REQCERT     demand
+  BASE            dc=ncsa,dc=illinois,dc=edu
+  URI             ldaps://ldap1.ncsa.illinois.edu ldaps://ldap2.ncsa.illinois.edu ldaps://ldap3.ncsa.illinois.edu ldaps://ldap4.ncsa.illinois.edu
+  SASL_NOCANON    on
+  SSL             yes
+profile_system_auth::ldap::required_pkgs:
+  - "openldap2-client"
+
+profile_system_auth::su::su_path: "/usr/bin/su"

@@ -14,6 +14,7 @@ used by NCSA. It configures kerberos, ldap, sssd, su, and general authentication
 
 ## Dependencies
 - https://github.com/ncsa/puppet-sssd
+- herculesteam/augeasproviders_pam
 
 
 * `authselect` (or `authconfig` for EL7)

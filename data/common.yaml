@@ -25,6 +25,8 @@ profile_system_auth::config::oddjobd_mkhomedir_conf: |
       </object>
     </service>
   </oddjobconfig>
+profile_system_auth::config::pam_config: {}
+
 profile_system_auth::kerberos::cfg_file_settings:
   /etc/krb5.conf: |
     # This file is managed by Puppet.
