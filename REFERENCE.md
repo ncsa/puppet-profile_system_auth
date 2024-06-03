@@ -7,10 +7,10 @@
 ### Classes
 
 * [`profile_system_auth`](#profile_system_auth): Setup default system auth
-* [`profile_system_auth::config`](#profile_system_authconfig): Configure system auth
-* [`profile_system_auth::kerberos`](#profile_system_authkerberos): Basic kerberos client setup, with optional host principal management
-* [`profile_system_auth::ldap`](#profile_system_authldap): Basic ldap client setup
-* [`profile_system_auth::su`](#profile_system_authsu): Basic su configuration
+* [`profile_system_auth::config`](#profile_system_auth--config): Configure system auth
+* [`profile_system_auth::kerberos`](#profile_system_auth--kerberos): Basic kerberos client setup, with optional host principal management
+* [`profile_system_auth::ldap`](#profile_system_auth--ldap): Basic ldap client setup
+* [`profile_system_auth::su`](#profile_system_auth--su): Basic su configuration
 
 ## Classes
 
@@ -26,7 +26,7 @@ Setup system auth: authselect/authconfig, kerberos, ldap, sssd, etc
 include profile_system_auth
 ```
 
-### <a name="profile_system_authconfig"></a>`profile_system_auth::config`
+### <a name="profile_system_auth--config"></a>`profile_system_auth::config`
 
 Configure system auth
 
@@ -42,51 +42,58 @@ include profile_system_auth::config
 
 The following parameters are available in the `profile_system_auth::config` class:
 
-* [`authselect_profile`](#authselect_profile)
-* [`enable_mkhomedir`](#enable_mkhomedir)
-* [`oddjobd_mkhomedir_conf`](#oddjobd_mkhomedir_conf)
-* [`removed_pkgs`](#removed_pkgs)
-* [`required_pkgs`](#required_pkgs)
-* [`use_authconfig`](#use_authconfig)
+* [`authselect_profile`](#-profile_system_auth--config--authselect_profile)
+* [`enable_mkhomedir`](#-profile_system_auth--config--enable_mkhomedir)
+* [`oddjobd_mkhomedir_conf`](#-profile_system_auth--config--oddjobd_mkhomedir_conf)
+* [`pam_config`](#-profile_system_auth--config--pam_config)
+* [`removed_pkgs`](#-profile_system_auth--config--removed_pkgs)
+* [`required_pkgs`](#-profile_system_auth--config--required_pkgs)
+* [`use_authconfig`](#-profile_system_auth--config--use_authconfig)
 
-##### <a name="authselect_profile"></a>`authselect_profile`
+##### <a name="-profile_system_auth--config--authselect_profile"></a>`authselect_profile`
 
 Data type: `String`
 
 String of authselect profile
 Valid only for >= RHEL8
 
-##### <a name="enable_mkhomedir"></a>`enable_mkhomedir`
+##### <a name="-profile_system_auth--config--enable_mkhomedir"></a>`enable_mkhomedir`
 
 Data type: `Boolean`
 
 Boolean to enable mkhomedir on user login
 
-##### <a name="oddjobd_mkhomedir_conf"></a>`oddjobd_mkhomedir_conf`
+##### <a name="-profile_system_auth--config--oddjobd_mkhomedir_conf"></a>`oddjobd_mkhomedir_conf`
 
 Data type: `String`
 
 String of file content for /etc/oddjobd.conf.d/oddjobd-mkhomedir.conf
 
-##### <a name="removed_pkgs"></a>`removed_pkgs`
+##### <a name="-profile_system_auth--config--pam_config"></a>`pam_config`
 
-Data type: `Any`
+Data type: `Hash`
+
+Optional pam settings for augeasproviders_pam puppet module
+
+##### <a name="-profile_system_auth--config--removed_pkgs"></a>`removed_pkgs`
+
+Data type: `Array[String[1]]`
 
 Optional array of Strings of package names to remove
 
-##### <a name="required_pkgs"></a>`required_pkgs`
+##### <a name="-profile_system_auth--config--required_pkgs"></a>`required_pkgs`
 
-Data type: `Array[ String[1] ]`
+Data type: `Array[String[1]]`
 
 Array of strings of package names to install
 
-##### <a name="use_authconfig"></a>`use_authconfig`
+##### <a name="-profile_system_auth--config--use_authconfig"></a>`use_authconfig`
 
 Data type: `Boolean`
 
 Boolean to use optional authconfig instead of default authselect
 
-### <a name="profile_system_authkerberos"></a>`profile_system_auth::kerberos`
+### <a name="profile_system_auth--kerberos"></a>`profile_system_auth::kerberos`
 
 profile_system_auth::kerberos
 
@@ -102,64 +109,64 @@ include profile_system_auth::kerberos
 
 The following parameters are available in the `profile_system_auth::kerberos` class:
 
-* [`cfg_file_settings`](#cfg_file_settings)
-* [`createhostkeytab`](#createhostkeytab)
-* [`createhostuser`](#createhostuser)
-* [`crons`](#crons)
-* [`enable`](#enable)
-* [`files_remove_setuid`](#files_remove_setuid)
-* [`required_pkgs`](#required_pkgs)
-* [`root_k5login_principals`](#root_k5login_principals)
+* [`cfg_file_settings`](#-profile_system_auth--kerberos--cfg_file_settings)
+* [`createhostkeytab`](#-profile_system_auth--kerberos--createhostkeytab)
+* [`createhostuser`](#-profile_system_auth--kerberos--createhostuser)
+* [`crons`](#-profile_system_auth--kerberos--crons)
+* [`enable`](#-profile_system_auth--kerberos--enable)
+* [`files_remove_setuid`](#-profile_system_auth--kerberos--files_remove_setuid)
+* [`required_pkgs`](#-profile_system_auth--kerberos--required_pkgs)
+* [`root_k5login_principals`](#-profile_system_auth--kerberos--root_k5login_principals)
 
-##### <a name="cfg_file_settings"></a>`cfg_file_settings`
+##### <a name="-profile_system_auth--kerberos--cfg_file_settings"></a>`cfg_file_settings`
 
 Data type: `Hash`
 
 Hash of file resource parameters for various config files
 
-##### <a name="createhostkeytab"></a>`createhostkeytab`
+##### <a name="-profile_system_auth--kerberos--createhostkeytab"></a>`createhostkeytab`
 
-Data type: `Optional[ String ]`
+Data type: `Optional[String]`
 
 Optional String of base64 encoding of krb5 createhost keytab file
 
-##### <a name="createhostuser"></a>`createhostuser`
+##### <a name="-profile_system_auth--kerberos--createhostuser"></a>`createhostuser`
 
-Data type: `Optional[ String ]`
+Data type: `Optional[String]`
 
 Optional String of kerberos principal username to be used for kerberos createhost
 
-##### <a name="crons"></a>`crons`
+##### <a name="-profile_system_auth--kerberos--crons"></a>`crons`
 
 Data type: `Hash`
 
 Hash of cron resource parameters for any CRON entries related to kerberos keytab cleanup
 
-##### <a name="enable"></a>`enable`
+##### <a name="-profile_system_auth--kerberos--enable"></a>`enable`
 
 Data type: `Boolean`
 
 Used to enable or disable kerberos
 
-##### <a name="files_remove_setuid"></a>`files_remove_setuid`
+##### <a name="-profile_system_auth--kerberos--files_remove_setuid"></a>`files_remove_setuid`
 
 Data type: `Hash`
 
 Hash of file resource paramters that need setuid removed from them
 
-##### <a name="required_pkgs"></a>`required_pkgs`
+##### <a name="-profile_system_auth--kerberos--required_pkgs"></a>`required_pkgs`
 
-Data type: `Array[ String[1] ]`
+Data type: `Array[String[1]]`
 
 Array of strings of package names to install
 
-##### <a name="root_k5login_principals"></a>`root_k5login_principals`
+##### <a name="-profile_system_auth--kerberos--root_k5login_principals"></a>`root_k5login_principals`
 
-Data type: `Optional[ Array[ String[1] ] ]`
+Data type: `Optional[Array[String[1]]]`
 
 Optional Array k5login principals with root privileges
 
-### <a name="profile_system_authldap"></a>`profile_system_auth::ldap`
+### <a name="profile_system_auth--ldap"></a>`profile_system_auth::ldap`
 
 Basic ldap client setup
 
@@ -175,22 +182,22 @@ include profile_system_auth::ldap
 
 The following parameters are available in the `profile_system_auth::ldap` class:
 
-* [`ldap_conf`](#ldap_conf)
-* [`required_pkgs`](#required_pkgs)
+* [`ldap_conf`](#-profile_system_auth--ldap--ldap_conf)
+* [`required_pkgs`](#-profile_system_auth--ldap--required_pkgs)
 
-##### <a name="ldap_conf"></a>`ldap_conf`
+##### <a name="-profile_system_auth--ldap--ldap_conf"></a>`ldap_conf`
 
 Data type: `String`
 
 String of file content for /etc/openldap/ldap.conf
 
-##### <a name="required_pkgs"></a>`required_pkgs`
+##### <a name="-profile_system_auth--ldap--required_pkgs"></a>`required_pkgs`
 
-Data type: `Array[ String[1] ]`
+Data type: `Array[String[1]]`
 
 Array of strings of package names to install
 
-### <a name="profile_system_authsu"></a>`profile_system_auth::su`
+### <a name="profile_system_auth--su"></a>`profile_system_auth::su`
 
 Basic su configuration
 
@@ -206,16 +213,16 @@ include profile_system_auth::su
 
 The following parameters are available in the `profile_system_auth::su` class:
 
-* [`disable_su`](#disable_su)
-* [`su_path`](#su_path)
+* [`disable_su`](#-profile_system_auth--su--disable_su)
+* [`su_path`](#-profile_system_auth--su--su_path)
 
-##### <a name="disable_su"></a>`disable_su`
+##### <a name="-profile_system_auth--su--disable_su"></a>`disable_su`
 
 Data type: `Boolean`
 
 Boolean to disable su (disabled by setting permissions on su to 700)
 
-##### <a name="su_path"></a>`su_path`
+##### <a name="-profile_system_auth--su--su_path"></a>`su_path`
 
 Data type: `String`
 

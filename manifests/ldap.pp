@@ -10,9 +10,8 @@
 #   include profile_system_auth::ldap
 class profile_system_auth::ldap (
   String             $ldap_conf,     # ldap.conf file contents
-  Array[ String[1] ] $required_pkgs, # DEFAULT SET VIA MODULE DATA
+  Array[String[1]] $required_pkgs, # DEFAULT SET VIA MODULE DATA
 ) {
-
   ensure_packages( $required_pkgs )
 
   $file_defaults = {
@@ -25,7 +24,7 @@ class profile_system_auth::ldap (
     '/etc/openldap':
       ensure => directory,
       mode   => '0755',
-    ;
+      ;
     default: * => $file_defaults
     ;
   }
@@ -33,9 +32,8 @@ class profile_system_auth::ldap (
     '/etc/openldap/ldap.conf':
       content => $ldap_conf,
       require => File['/etc/openldap'],
-    ;
+      ;
     default: * => $file_defaults
     ;
   }
-
 }

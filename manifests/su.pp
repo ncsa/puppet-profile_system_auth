@@ -12,7 +12,6 @@ class profile_system_auth::su (
   Boolean $disable_su,
   String $su_path,
 ) {
-
   if ($disable_su) {
     $mode = '0700'
   } else {
@@ -24,5 +23,4 @@ class profile_system_auth::su (
     group => 'root',
     mode  => $mode,
   }
-
 }

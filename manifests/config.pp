@@ -10,6 +10,9 @@
 # @param oddjobd_mkhomedir_conf
 #   String of file content for /etc/oddjobd.conf.d/oddjobd-mkhomedir.conf
 #
+# @param pam_config
+#   Optional pam settings for augeasproviders_pam puppet module
+#
 # @param removed_pkgs
 #   Optional array of Strings of package names to remove
 #
@@ -22,14 +25,14 @@
 # @example
 #   include profile_system_auth::config
 class profile_system_auth::config (
-  String             $authselect_profile,
-  Boolean            $enable_mkhomedir,
-  String             $oddjobd_mkhomedir_conf,
-  $removed_pkgs,
-  Array[ String[1] ] $required_pkgs,
-  Boolean            $use_authconfig,
+  String           $authselect_profile,
+  Boolean          $enable_mkhomedir,
+  String           $oddjobd_mkhomedir_conf,
+  Hash             $pam_config,
+  Array[String[1]] $removed_pkgs,
+  Array[String[1]] $required_pkgs,
+  Boolean          $use_authconfig,
 ) {
-
   $file_defaults = {
     owner  => root,
     group  => root,
@@ -37,23 +40,20 @@ class profile_system_auth::config (
     mode   => '0644',
   }
 
-  if ($removed_pkgs)
-  {
-    ensure_packages( $removed_pkgs, {'ensure' => 'absent', })
+  if ($removed_pkgs) {
+    ensure_packages( $removed_pkgs, { 'ensure' => 'absent', })
   }
 
   ensure_packages( $required_pkgs )
 
-  if ( $use_authconfig )
-  {
+  if ( $use_authconfig ) {
     exec { 'authconfig_enablesssdauth':
       path    => '/sbin/:/bin/:/usr/bin/:/usr/sbin/',
       onlyif  => 'test `grep -i "USESSSD" /etc/sysconfig/authconfig | grep -i "\=yes" | wc -l` -lt 2',
       command => 'authconfig --enablesssd --enablesssdauth --update',
     }
   }
-  else
-  {
+  else {
     exec { "authselect_select_${authselect_profile}":
       path    => '/sbin/:/bin/:/usr/bin/:/usr/sbin/',
       onlyif  => "test `authselect current | grep -i profile | grep -i ${authselect_profile} | wc -l` -lt 1",
@@ -61,9 +61,12 @@ class profile_system_auth::config (
     }
   }
 
+  if ! empty($pam_config) {
+    ensure_resources( 'pam', $pam_config)
+  }
+
   # ENABLE MKHOMEDIR (create homedir on first login)
-  if $enable_mkhomedir
-  {
+  if $enable_mkhomedir {
     service { 'oddjobd':
       ensure  => running,
       enable  => true,
@@ -75,40 +78,34 @@ class profile_system_auth::config (
       '/etc/oddjobd.conf.d/oddjobd-mkhomedir.conf':
         content => $oddjobd_mkhomedir_conf,
         notify  => Service['oddjobd'],
-      ;
+        ;
       default: * => $file_defaults
       ;
     }
-    if ( $use_authconfig )
-    {
+    if ( $use_authconfig ) {
       exec { 'authconfig_enable_mkhomedir':
         path    => '/sbin/:/bin/:/usr/bin/:/usr/sbin/',
         onlyif  => 'test `grep -i "USEMKHOMEDIR" /etc/sysconfig/authconfig | grep -i "\=yes" | wc -l` -lt 1',
         command => 'authconfig --enablemkhomedir --update',
       }
     }
-    else
-    {
+    else {
       exec { 'authselect_enable_mkhomedir':
         path    => '/sbin/:/bin/:/usr/bin/:/usr/sbin/',
         onlyif  => 'test `authselect current | grep -i "with-mkhomedir" | wc -l` -lt 1',
         command => 'authselect enable-feature with-mkhomedir',
       }
     }
-
   }
-  else
-  {
-    if ( $use_authconfig )
-    {
+  else {
+    if ( $use_authconfig ) {
       exec { 'authconfig_disable_mkhomedir':
         path    => '/sbin/:/bin/:/usr/bin/:/usr/sbin/',
         onlyif  => 'test `grep -i "USEMKHOMEDIR" /etc/sysconfig/authconfig | grep -i "\=yes" | wc -l` -gt 0',
         command => 'authconfig --disablemkhomedir --update',
       }
     }
-    else
-    {
+    else {
       exec { 'authselect_disable_mkhomedir':
         path    => '/sbin/:/bin/:/usr/bin/:/usr/sbin/',
         onlyif  => 'test `authselect current | grep -i "with-mkhomedir" | wc -l` -gt 0',
@@ -116,5 +113,4 @@ class profile_system_auth::config (
       }
     }
   }
-
 }
