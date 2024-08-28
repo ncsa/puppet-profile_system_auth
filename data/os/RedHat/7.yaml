@@ -1,5 +1,5 @@
 ---
-profile_system_auth::config::removed_pkgs: {}
+profile_system_auth::config::removed_pkgs: []
 profile_system_auth::config::required_pkgs:
   - "authconfig"
   - "oddjob"
