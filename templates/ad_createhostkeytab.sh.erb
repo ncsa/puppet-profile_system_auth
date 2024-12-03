@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Enable debugging mode
+set -x
+
+# ASSIGN ARGUMENTS FROM COMMAND LINE ARGUMENTS
+AD_DOMAIN=$1        # Active Directory domain
+AD_OU_COMPUTERS=$2  # Organizational Unit for computers in AD
+AD_USER=$3          # User with permissions to create host in AD
+KEYTAB_BASE64=$4    # Base64 encoded keytab for creating host
+
+# ASSIGN STATIC VARIABLES
+HOST_FQDN="<%= @fqdn %>"  # Fully Qualified Domain Name of the host
+KEYTAB_FILE="/root/createhost.keytab"  # Path to store the decoded keytab file
+OS_NAME="<%= @os['name'] %>"  # Operating System name
+
+# Decode the base64 encoded keytab and save it to a file
+echo "${KEYTAB_BASE64}" | base64 --decode > $KEYTAB_FILE
+
+# Authenticate using the keytab file
+kinit -k -t $KEYTAB_FILE $AD_USER
+
+# Pre-create the computer account in the specified OU
+adcli preset-computer --domain="${AD_DOMAIN}" --domain-ou="${AD_OU_COMPUTERS}" -U "${AD_USER}" --login-ccache --os-name="${OS_NAME}" $HOST_FQDN
+
+# Join the computer to the AD domain
+adcli join --domain="${AD_DOMAIN}" -U "${AD_USER}" --login-ccache
+
+# Destroy the Kerberos ticket cache for the user
+kdestroy -p $AD_USER
+
+# Optionally, list the contents of the keytab file (uncomment for debugging)
+# klist -kte
+
+# Remove the keytab file for security reasons
+rm -f $KEYTAB_FILE

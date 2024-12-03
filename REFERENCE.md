@@ -109,6 +109,10 @@ include profile_system_auth::kerberos
 
 The following parameters are available in the `profile_system_auth::kerberos` class:
 
+* [`ad_computers_ou`](#-profile_system_auth--kerberos--ad_computers_ou)
+* [`ad_createhostkeytab`](#-profile_system_auth--kerberos--ad_createhostkeytab)
+* [`ad_createhostuser`](#-profile_system_auth--kerberos--ad_createhostuser)
+* [`ad_domain`](#-profile_system_auth--kerberos--ad_domain)
 * [`cfg_file_settings`](#-profile_system_auth--kerberos--cfg_file_settings)
 * [`createhostkeytab`](#-profile_system_auth--kerberos--createhostkeytab)
 * [`createhostuser`](#-profile_system_auth--kerberos--createhostuser)
@@ -117,6 +121,30 @@ The following parameters are available in the `profile_system_auth::kerberos` cl
 * [`files_remove_setuid`](#-profile_system_auth--kerberos--files_remove_setuid)
 * [`required_pkgs`](#-profile_system_auth--kerberos--required_pkgs)
 * [`root_k5login_principals`](#-profile_system_auth--kerberos--root_k5login_principals)
+
+##### <a name="-profile_system_auth--kerberos--ad_computers_ou"></a>`ad_computers_ou`
+
+Data type: `Optional[String]`
+
+Optional String of AD OU where computer objects should be created
+
+##### <a name="-profile_system_auth--kerberos--ad_createhostkeytab"></a>`ad_createhostkeytab`
+
+Data type: `Optional[String]`
+
+Optional String of base64 encoding of AD krb5 createhost keytab file
+
+##### <a name="-profile_system_auth--kerberos--ad_createhostuser"></a>`ad_createhostuser`
+
+Data type: `Optional[String]`
+
+Optional String of user with permissions to create host in AD
+
+##### <a name="-profile_system_auth--kerberos--ad_domain"></a>`ad_domain`
+
+Data type: `Optional[String]`
+
+Optional String of the Active Directory domain that the computer should join
 
 ##### <a name="-profile_system_auth--kerberos--cfg_file_settings"></a>`cfg_file_settings`
 
