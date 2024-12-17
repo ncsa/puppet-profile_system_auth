@@ -73,7 +73,6 @@ profile_system_auth::kerberos::cfg_file_settings:
 
 profile_system_auth::kerberos::createhostkeytab: null
 profile_system_auth::kerberos::createhostuser: null
-
 profile_system_auth::kerberos::crons:
   "key_cleanup":
     command: "k5srvutil delold >/tmp/k5srvutil_delold.$$ 2>&1 || cat /tmp/k5srvutil_delold.$$ && rm -f /tmp/k5srvutil_delold.$$"
@@ -91,6 +90,7 @@ profile_system_auth::kerberos::crons:
     minute: 30
     monthday: 1
     user: "root"
+profile_system_auth::kerberos::domain: "NCSA.EDU"
 profile_system_auth::kerberos::enable: true
 
 profile_system_auth::kerberos::root_k5login_principals: null

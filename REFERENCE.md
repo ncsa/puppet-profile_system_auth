@@ -117,6 +117,7 @@ The following parameters are available in the `profile_system_auth::kerberos` cl
 * [`createhostkeytab`](#-profile_system_auth--kerberos--createhostkeytab)
 * [`createhostuser`](#-profile_system_auth--kerberos--createhostuser)
 * [`crons`](#-profile_system_auth--kerberos--crons)
+* [`domain`](#-profile_system_auth--kerberos--domain)
 * [`enable`](#-profile_system_auth--kerberos--enable)
 * [`files_remove_setuid`](#-profile_system_auth--kerberos--files_remove_setuid)
 * [`required_pkgs`](#-profile_system_auth--kerberos--required_pkgs)
@@ -169,6 +170,12 @@ Optional String of kerberos principal username to be used for kerberos createhos
 Data type: `Hash`
 
 Hash of cron resource parameters for any CRON entries related to kerberos keytab cleanup
+
+##### <a name="-profile_system_auth--kerberos--domain"></a>`domain`
+
+Data type: `Optional[String]`
+
+Optional String of the Kerberos domain that the computer should join
 
 ##### <a name="-profile_system_auth--kerberos--enable"></a>`enable`
 

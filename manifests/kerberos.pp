@@ -26,6 +26,9 @@
 # @param crons
 #   Hash of cron resource parameters for any CRON entries related to kerberos keytab cleanup
 #
+# @param domain
+#   Optional String of the Kerberos domain that the computer should join
+#
 # @param enable
 #   Used to enable or disable kerberos
 #
@@ -46,10 +49,11 @@ class profile_system_auth::kerberos (
   Optional[String] $ad_createhostkeytab,  # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
   Optional[String] $ad_createhostuser,    # AD CREATEHOST USER
   Optional[String] $ad_domain,            # AD DOMAIN
-  Hash             $cfg_file_settings, # cfg files and their contents
-  Optional[String] $createhostkeytab,  # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
-  Optional[String] $createhostuser,    # CREATEHOST USER
+  Hash             $cfg_file_settings,    # cfg files and their contents
+  Optional[String] $createhostkeytab,     # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
+  Optional[String] $createhostuser,       # CREATEHOST USER
   Hash             $crons,
+  Optional[String] $domain,               # KERBEROS DOMAIN
   Boolean          $enable,
   Hash             $files_remove_setuid,
   Array[String[1]] $required_pkgs,     # DEFAULT SET VIA MODULE DATA
@@ -98,20 +102,31 @@ class profile_system_auth::kerberos (
 
     # KERBEROS HOST PRINCIPAL CREATION
     if ( $createhostkeytab and $createhostuser ) {
-      # CREATE KEYS AND SETUP RENEWAL
-      file { '/root/createhostkeytab.sh':
-        ensure => file,
-        mode   => '0500',
-        source => "puppet:///modules/${module_name}/root/createhostkeytab.sh",
+      $kerberos_domains = split($facts['kerberos_keytab_domains'], ',')
+      if ( $domain in $kerberos_domains ) {
+        $ensure_parm = 'absent'
+      } else {
+        $ensure_parm = 'present'
+
+        exec { 'run_create_host_keytab_script':
+          path    => ['/usr/bin', '/usr/sbin', '/usr/lib/mit/bin'],
+          command => Sensitive(
+            "/root/createhostkeytab.sh '${createhostkeytab}' '${createhostuser}' '${domain}'"
+          ),
+          require => File['/root/createhostkeytab.sh'],
+        }
+
+        # FOLLOWING IS JUST IN CASE THE run_create_host_keytab_script TIMES OUT, WHICH IT HAS
+        file { '/root/createhost.keytab':
+          ensure  => absent,
+          require => Exec['run_create_host_keytab_script'],
+        }
       }
-      ## THIS MIGHT NEED TO BE SMARTER TO ALLOW FOR MULTIPLE HOSTNAMES ON ONE SERVER
-      exec { 'create_host_keytab':
-        path    => ['/usr/bin', '/usr/sbin', '/usr/lib/mit/bin'],
-        command => "/root/createhostkeytab.sh ${createhostkeytab} ${createhostuser}",
-        unless  => 'klist -kt /etc/krb5.keytab 2>&1 | grep "host/`hostname -f`@NCSA.EDU"',
-        require => [
-          File['/root/createhostkeytab.sh'],
-        ],
+
+      file { '/root/createhostkeytab.sh':
+        ensure  => $ensure_parm,
+        mode    => '0500',
+        content => template("${module_name}/createhostkeytab.sh.erb"),
       }
 
       Cron {
@@ -146,7 +161,6 @@ class profile_system_auth::kerberos (
           command => Sensitive(
             "/root/ad_createhostkeytab.sh '${ad_domain}' '${ad_computers_ou}' '${ad_createhostuser}' '${ad_createhostkeytab}' "
           ),
-          #refreshonly => true,
           require => File['/root/ad_createhostkeytab.sh'],
         }
 
