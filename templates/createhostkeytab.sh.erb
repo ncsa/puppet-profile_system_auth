@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -e
+# Enable debugging mode
+set -x
+
+# ASSIGN ARGUMENTS FROM COMMAND LINE ARGUMENTS
+CREATEHOST_USER=$2  # User with permissions to create host in AD
+DOMAIN=$3           # KERBEROS DOMAIN
+KEYTAB_BASE64=$1    # Base64 encoded keytab for creating host
+
+# ASSIGN STATIC VARIABLES
+HOST_FQDN="<%= @fqdn %>"  # Fully Qualified Domain Name of the host
+KEYTAB_FILE="/root/createhost.keytab"  # Path to store the decoded keytab file
+
+RANDSTRING=`head -c 16 /dev/random  | base64 | grep -o . | sort -R | tr -d "\n" | head -c 14`
+REQCLASS1=`date | base64 | tr -dc A-Z | grep -o . | sort -R | tr -d "\n" | head -c2`
+REQCLASS2=`date | base64 | tr -dc a-z | grep -o . | sort -R | tr -d "\n" | head -c2`
+REQCLASS3=`date | tr -dc 0-9 | grep -o . | sort -R | tr -d "\n" | head -c2`
+REQCHARS=`echo $REQCLASS1$REQCLASS2$REQCLASS3`
+TEMPPASS=`echo "$RANDSTRING$REQCHARS" | grep -o . | sort -R | tr -d "\n"`
+
+# Decode the base64 encoded keytab and save it to a file
+echo "${KEYTAB_BASE64}" | base64 --decode > $KEYTAB_FILE
+
+echo -e "$TEMPPASS\n$TEMPPASS" | kadmin -kt /root/createhost.keytab -p ${CREATEHOST_USER}/createhost@${DOMAIN} -q "addprinc host/${HOST_FQDN}@${DOMAIN}"
+echo -e "$TEMPPASS" | kadmin -p host/${HOST_FQDN}@${DOMAIN} -q "ktadd host/${HOST_FQDN}@${DOMAIN}"
+
+# Optionally, list the contents of the keytab file (uncomment for debugging)
+# klist -kte
+
+# Remove the keytab file for security reasons
+rm -f $KEYTAB_FILE
