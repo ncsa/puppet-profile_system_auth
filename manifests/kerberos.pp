@@ -45,18 +45,18 @@
 #   include profile_system_auth::kerberos
 #
 class profile_system_auth::kerberos (
-  Optional[String] $ad_computers_ou,      # AD OU FOR COMPUTER OBJECTS
-  Optional[String] $ad_createhostkeytab,  # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
-  Optional[String] $ad_createhostuser,    # AD CREATEHOST USER
-  Optional[String] $ad_domain,            # AD DOMAIN
-  Hash             $cfg_file_settings,    # cfg files and their contents
-  Optional[String] $createhostkeytab,     # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
-  Optional[String] $createhostuser,       # CREATEHOST USER
+  Optional[String] $ad_computers_ou,          # AD OU FOR COMPUTER OBJECTS
+  Optional[String] $ad_createhostkeytab,      # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
+  Optional[String] $ad_createhostuser,        # AD CREATEHOST USER
+  Optional[String] $ad_domain,                # AD DOMAIN
+  Hash             $cfg_file_settings,        # cfg files and their contents
+  Optional[String] $createhostkeytab,         # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
+  Optional[String] $createhostuser,           # CREATEHOST USER
   Hash             $crons,
-  Optional[String] $domain,               # KERBEROS DOMAIN
+  Optional[String] $domain,                   # KERBEROS DOMAIN
   Boolean          $enable,
   Hash             $files_remove_setuid,
-  Array[String[1]] $required_pkgs,     # DEFAULT SET VIA MODULE DATA
+  Array[String[1]] $required_pkgs,            # DEFAULT SET VIA MODULE DATA
   Optional[Array[String[1]]] $root_k5login_principals, # PRINCIPALS WITH ROOT PRIVILEGES
 ) {
   if ($enable) {
@@ -88,6 +88,24 @@ class profile_system_auth::kerberos (
       }
     }
 
+    # SVCPLAN-5143: use KEYRING ccache instead of KCM
+    $default_ccache_file = '/etc/krb5.conf.d/kcm_default_ccache'
+    $puppet_file_header = '# This file is managed by Puppet.'
+    exec { "add puppet header to ${default_ccache_file}":
+      command => "sed -i '1s/^/${puppet_file_header}\\n/' '${default_ccache_file}'",
+      unless  => "grep '${puppet_file_header}' ${default_ccache_file}",
+      path    => ['/bin', '/usr/bin'],
+    }
+    ini_setting { 'set persistent keyring ccache':
+      ensure       => present,
+      path         => $default_ccache_file,
+      section      => 'libdefaults',
+      setting      => 'default_ccache_name',
+      value        => 'KEYRING:persistent:%{uid}',
+      indent_char  => ' ',
+      indent_width => 4,
+    }
+
     if ( $root_k5login_principals ) {
       file { '/root/.k5login':
         content => join($root_k5login_principals, "\n"),
@@ -101,7 +119,7 @@ class profile_system_auth::kerberos (
     }
 
     # KERBEROS HOST PRINCIPAL CREATION
-    if ( $createhostkeytab and $createhostuser ) {
+    if ( $createhostkeytab and $createhostuser and $facts['kerberos_keytab_domains'] ) {
       $kerberos_domains = split($facts['kerberos_keytab_domains'], ',')
       if ( $domain in $kerberos_domains ) {
         $ensure_parm = 'absent'

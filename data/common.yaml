@@ -27,7 +27,6 @@ profile_system_auth::config::oddjobd_mkhomedir_conf: |
   </oddjobconfig>
 profile_system_auth::config::pam_config: {}
 
-
 profile_system_auth::kerberos::ad_computers_ou: null
 profile_system_auth::kerberos::ad_createhostkeytab: null
 profile_system_auth::kerberos::ad_createhostuser: null
