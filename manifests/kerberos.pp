@@ -90,6 +90,10 @@ class profile_system_auth::kerberos (
 
     # SVCPLAN-5143: use KEYRING ccache instead of KCM
     $default_ccache_file = '/etc/krb5.conf.d/kcm_default_ccache'
+    file { $default_ccache_file:
+      ensure => file,
+      mode   => '0644',
+    }
     $puppet_file_header = '# This file is managed by Puppet.'
     exec { "add puppet header to ${default_ccache_file}":
       command => "sed -i '1s/^/${puppet_file_header}\\n/' '${default_ccache_file}'",
