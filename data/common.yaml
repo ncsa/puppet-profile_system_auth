@@ -74,7 +74,7 @@ profile_system_auth::kerberos::createhostkeytab: null
 profile_system_auth::kerberos::createhostuser: null
 profile_system_auth::kerberos::crons:
   "key_cleanup":
-    command: "k5srvutil delold >/tmp/k5srvutil_delold.$$ 2>&1 || cat /tmp/k5srvutil_delold.$$ && rm -f /tmp/k5srvutil_delold.$$"
+    command: "#k5srvutil delold >/tmp/k5srvutil_delold.$$ 2>&1 || cat /tmp/k5srvutil_delold.$$ && rm -f /tmp/k5srvutil_delold.$$"
     environment:
       - "SHELL=/bin/sh"
     hour: 8
@@ -82,7 +82,7 @@ profile_system_auth::kerberos::crons:
     monthday: 15
     user: "root"
   "key_refresh":
-    command: "sleep $((RANDOM \u005C\u0025 15))m && k5srvutil change >/tmp/k5srvutil_change.$$ 2>&1 || cat  /tmp/k5srvutil_change.$$ && rm -f /tmp/k5srvutil_change.$$"
+    command: "#sleep $((RANDOM \u005C\u0025 15))m && k5srvutil change >/tmp/k5srvutil_change.$$ 2>&1 || cat  /tmp/k5srvutil_change.$$ && rm -f /tmp/k5srvutil_change.$$"
     environment:
       - "SHELL=/bin/sh"
     hour: 23
