@@ -74,7 +74,7 @@ profile_system_auth::kerberos::createhostkeytab: null
 profile_system_auth::kerberos::createhostuser: null
 profile_system_auth::kerberos::crons:
   "key_cleanup":
-    command: "echo key_cleanup temporarity disabled on Delta"
+    command: "echo key_cleanup temporarity disabled on Delta >/dev/null"
     environment:
       - "SHELL=/bin/sh"
     hour: 8
@@ -82,7 +82,7 @@ profile_system_auth::kerberos::crons:
     monthday: 15
     user: "root"
   "key_refresh":
-    command: "echo key_refresh temporarity disabled on Delta"
+    command: "echo key_refresh temporarity disabled on Delta >/dev/null"
     environment:
       - "SHELL=/bin/sh"
     hour: 23
