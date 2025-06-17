@@ -42,6 +42,7 @@ include profile_system_auth::config
 
 The following parameters are available in the `profile_system_auth::config` class:
 
+* [`authselect_features`](#-profile_system_auth--config--authselect_features)
 * [`authselect_profile`](#-profile_system_auth--config--authselect_profile)
 * [`enable_mkhomedir`](#-profile_system_auth--config--enable_mkhomedir)
 * [`oddjobd_mkhomedir_conf`](#-profile_system_auth--config--oddjobd_mkhomedir_conf)
@@ -50,12 +51,18 @@ The following parameters are available in the `profile_system_auth::config` clas
 * [`required_pkgs`](#-profile_system_auth--config--required_pkgs)
 * [`use_authconfig`](#-profile_system_auth--config--use_authconfig)
 
+##### <a name="-profile_system_auth--config--authselect_features"></a>`authselect_features`
+
+Data type: `Array[String[1]]`
+
+Array of authselect features to enable
+
 ##### <a name="-profile_system_auth--config--authselect_profile"></a>`authselect_profile`
 
 Data type: `String`
 
 String of authselect profile
-Valid only for >= RHEL8
+Valid only for >= RHEL8 and SUSE
 
 ##### <a name="-profile_system_auth--config--enable_mkhomedir"></a>`enable_mkhomedir`
 
