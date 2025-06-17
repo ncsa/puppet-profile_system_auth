@@ -1,4 +1,6 @@
 ---
+profile_system_auth::config::authselect_features:
+  - "with-pamaccess"
 profile_system_auth::config::authselect_profile: "sssd"
 profile_system_auth::config::enable_mkhomedir: true
 profile_system_auth::config::oddjobd_mkhomedir_conf: |

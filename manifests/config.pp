@@ -1,8 +1,11 @@
 # @summary Configure system auth
 #
+# @param authselect_features
+#   Array of authselect features to enable
+#
 # @param authselect_profile
 #   String of authselect profile
-#   Valid only for >= RHEL8
+#   Valid only for >= RHEL8 and SUSE
 #
 # @param enable_mkhomedir
 #   Boolean to enable mkhomedir on user login
@@ -25,6 +28,7 @@
 # @example
 #   include profile_system_auth::config
 class profile_system_auth::config (
+  Array[String[1]] $authselect_features,
   String           $authselect_profile,
   Boolean          $enable_mkhomedir,
   String           $oddjobd_mkhomedir_conf,
@@ -58,6 +62,14 @@ class profile_system_auth::config (
       path    => '/sbin/:/bin/:/usr/bin/:/usr/sbin/',
       onlyif  => "test `authselect current | grep -i profile | grep -i ${authselect_profile} | wc -l` -lt 1",
       command => "authselect select ${authselect_profile} --force",
+    }
+    # FOR ITEMS IN $authselect_features ... $authselect_feature
+    $authselect_features.each | $authselect_feature | {
+      exec { "authselect_enable_feature_${authselect_feature}":
+        path    => '/sbin/:/bin/:/usr/bin/:/usr/sbin/',
+        onlyif  => "test `authselect current | awk '/features:\$/{y=1;next}y' | grep -i '${authselect_feature}' | wc -l` -lt 1",
+        command => "authselect enable-feature ${authselect_feature} || authselect select ${authselect_profile} --force && authselect enable-feature ${authselect_feature}",
+      }
     }
   }
 
