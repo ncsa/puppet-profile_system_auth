@@ -9,6 +9,10 @@ CREATEHOST_USER=$2  # User with permissions to create host in AD
 DOMAIN=$3           # KERBEROS DOMAIN
 KEYTAB_BASE64=$1    # Base64 encoded keytab for creating host
 
+echo CREATEHOST_USER -$CREATEHOST_USER- >>/tmp/yj
+echo DOMAIN -$DOMAIN- >>/tmp/yj
+echo KEYTAB_BASE64 -$KEYTAB_BASE64- >>/tmp/yj
+
 # ASSIGN STATIC VARIABLES
 HOST_FQDN="<%= @fqdn %>"  # Fully Qualified Domain Name of the host
 KEYTAB_FILE="/root/createhost.keytab"  # Path to store the decoded keytab file
@@ -30,4 +34,4 @@ echo -e "$TEMPPASS" | kadmin -p host/${HOST_FQDN}@${DOMAIN} -q "ktadd host/${HOS
 # klist -kte
 
 # Remove the keytab file for security reasons
-rm -f $KEYTAB_FILE
+#rm -f $KEYTAB_FILE
