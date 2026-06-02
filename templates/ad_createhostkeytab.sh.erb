@@ -20,17 +20,18 @@ echo "${KEYTAB_BASE64}" | base64 --decode > $KEYTAB_FILE
 # Authenticate using the keytab file
 kinit -k -t $KEYTAB_FILE $AD_USER
 
-# Pre-create the computer account in the specified OU
-adcli preset-computer --domain="${AD_DOMAIN}" --domain-ou="${AD_OU_COMPUTERS}" -U "${AD_USER}" --login-ccache --os-name="${OS_NAME}" $HOST_FQDN
+## NO LONGER NEEDED WITH WINDOWS SERVER 2025 DOMAIN CONTROLLERS
+## Pre-create the computer account in the specified OU
+#adcli preset-computer --verbose --domain="${AD_DOMAIN}" --domain-ou="${AD_OU_COMPUTERS}" -U "${AD_USER}" --login-ccache --os-name="${OS_NAME}" $HOST_FQDN
 
 # Join the computer to the AD domain
-adcli join --domain="${AD_DOMAIN}" -U "${AD_USER}" --login-ccache
+adcli join --verbose --domain="${AD_DOMAIN}" --domain-ou="${AD_OU_COMPUTERS}" -U "${AD_USER}" --login-ccache
 
 # Destroy the Kerberos ticket cache for the user
 kdestroy -p $AD_USER
 
 # Optionally, list the contents of the keytab file (uncomment for debugging)
-# klist -kte
+klist -kte
 
 # Remove the keytab file for security reasons
 rm -f $KEYTAB_FILE
