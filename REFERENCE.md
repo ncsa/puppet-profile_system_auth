@@ -123,6 +123,7 @@ The following parameters are available in the `profile_system_auth::kerberos` cl
 * [`cfg_file_settings`](#-profile_system_auth--kerberos--cfg_file_settings)
 * [`createhostkeytab`](#-profile_system_auth--kerberos--createhostkeytab)
 * [`createhostuser`](#-profile_system_auth--kerberos--createhostuser)
+* [`cron_path_additions`](#-profile_system_auth--kerberos--cron_path_additions)
 * [`crons`](#-profile_system_auth--kerberos--crons)
 * [`domain`](#-profile_system_auth--kerberos--domain)
 * [`enable`](#-profile_system_auth--kerberos--enable)
@@ -171,6 +172,17 @@ Optional String of base64 encoding of krb5 createhost keytab file
 Data type: `Optional[String]`
 
 Optional String of kerberos principal username to be used for kerberos createhost
+
+##### <a name="-profile_system_auth--kerberos--cron_path_additions"></a>`cron_path_additions`
+
+Data type: `Array[String]`
+
+Optional Array of Strings with directories that should be added to the PATH before
+the CRON entries execute. This is to help with OS distros that install Kerberos admin
+commands in locations that aren't on the PATH during CRON execution. It adds this
+as a local PATH override at the beginning of the command in each CRON entry rather
+than as an actual CRON environent variable (which would apply to every subsequent
+CRON entry in that crontab).
 
 ##### <a name="-profile_system_auth--kerberos--crons"></a>`crons`
 

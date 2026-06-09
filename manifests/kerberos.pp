@@ -23,6 +23,14 @@
 # @param createhostuser
 #   Optional String of kerberos principal username to be used for kerberos createhost
 #
+# @param cron_path_additions
+#   Optional Array of Strings with directories that should be added to the PATH before
+#   the CRON entries execute. This is to help with OS distros that install Kerberos admin
+#   commands in locations that aren't on the PATH during CRON execution. It adds this
+#   as a local PATH override at the beginning of the command in each CRON entry rather
+#   than as an actual CRON environent variable (which would apply to every subsequent
+#   CRON entry in that crontab).
+#
 # @param crons
 #   Hash of cron resource parameters for any CRON entries related to kerberos keytab cleanup
 #
@@ -52,6 +60,7 @@ class profile_system_auth::kerberos (
   Hash             $cfg_file_settings,        # cfg files and their contents
   Optional[String] $createhostkeytab,         # BASE64 ENCODING OF KRB5 CREATEHOST KEYTAB FILE
   Optional[String] $createhostuser,           # CREATEHOST USER
+  Array[String]    $cron_path_additions,
   Hash             $crons,
   Optional[String] $domain,                   # KERBEROS DOMAIN
   Boolean          $enable,
@@ -157,8 +166,29 @@ class profile_system_auth::kerberos (
         minute      => 1,
         environment => ['SHELL=/bin/sh',],
       }
-      $crons.each | $k, $v | {
-        cron { $k: * => $v }
+
+      # Build PATH prefix (or empty string)
+      $path_prefix = $cron_path_additions.empty ? {
+        true  => '',
+        false => "PATH=\"${cron_path_additions.join(':')}:\$PATH\" && ",
+      }
+
+      # Create cron resources
+      $crons.each |$k, $v| {
+        # Extract the base cron command
+        $original_cmd = $v['command']
+
+        # Build new command with optional prefix
+        $new_cmd = "${path_prefix}${original_cmd}"
+
+        # Merge into hash (override command)
+        $cron_params = $v + {
+          'command' => $new_cmd,
+        }
+
+        cron { $k:
+          * => $cron_params,
+        }
       }
     }
     else {

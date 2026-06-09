@@ -1,0 +1,4 @@
+---
+
+profile_system_auth::kerberos::cron_path_additions:
+  - "/usr/lib/mit/bin"
