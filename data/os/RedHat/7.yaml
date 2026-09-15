@@ -10,6 +10,6 @@ profile_system_auth::ldap::ldap_conf: |
   TLS_CACERTDIR   /etc/pki/tls/certs
   TLS_REQCERT     demand
   BASE            dc=ncsa,dc=illinois,dc=edu
-  URI             ldaps://ldap1.ncsa.illinois.edu ldaps://ldap2.ncsa.illinois.edu ldaps://ldap3.ncsa.illinois.edu ldaps://ldap4.ncsa.illinois.edu
+  URI             ldaps://ldap-1.ncsa.illinois.edu ldaps://ldap-2.ncsa.illinois.edu
   SASL_NOCANON    on
   SSL             yes
